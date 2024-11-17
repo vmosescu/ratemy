@@ -1,6 +1,9 @@
-
 import 'package:flutter/material.dart';
-import 'package:fashion/widgets/fidget_list.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:fashion/screens/add_photo.dart';
+import 'package:fashion/widgets/ratemy_list.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -8,11 +11,11 @@ class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: FidgetList(),
+      body: Center(
+        child: RatemyList(),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.surface,
         height: 50,
         child: Row(
           children: [
@@ -28,6 +31,23 @@ class FeedScreen extends StatelessWidget {
               icon: const Icon(Icons.people),
               onPressed: () {},
             ),
+            IconButton(
+              icon: const Icon(Icons.add_a_photo),
+              color: Theme.of(context).colorScheme.primary,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => const AddPhotoScreen(),
+                  ),
+                );
+              },
+            ),
+            IconButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                },
+                icon: const Icon(Icons.exit_to_app),
+                color: Theme.of(context).colorScheme.primary),
           ],
         ),
       ),
