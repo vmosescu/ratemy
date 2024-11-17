@@ -1,1 +1,1 @@
-Flutter mobile app for fashion app
+Flutter mobile app
