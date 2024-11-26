@@ -1,10 +1,9 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Ratemy extends StatefulWidget {
-  const Ratemy({super.key, required this.photoRef});
+  const Ratemy({super.key, required this.photoMeta});
 
-  final Reference photoRef;
+  final Map<String, dynamic> photoMeta;
 
   @override
   State<Ratemy> createState() {
@@ -15,8 +14,9 @@ class Ratemy extends StatefulWidget {
 class _RatemyState extends State<Ratemy> {
   var _isLoading = true;
   var _photoUrl = '';
+
   void loadPhotoUrl() async {
-    _photoUrl = await widget.photoRef.getDownloadURL();
+    _photoUrl = await widget.photoMeta['photo'];
     if (_isLoading) {
       setState(() {
         _isLoading = false;
