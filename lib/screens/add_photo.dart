@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -30,13 +31,25 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
+      final userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
       final uuid = DateTime.now().millisecondsSinceEpoch;
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('photos')
-          .child('${user!.uid}-$uuid.jpg');
+          .child('${user.uid}-$uuid.jpg');
 
       await storageRef.putFile(_selectedPhoto!);
+      final photoUrl = await storageRef.getDownloadURL();
+
+      await FirebaseFirestore.instance.collection('photos').add({
+        'userId': user.uid,
+        'username': userData.data()!['username'],
+        'createdAt': Timestamp.now(),
+        'photo': photoUrl,
+      });
     } on FirebaseException catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
